@@ -106,7 +106,7 @@ class _UsersScreenState extends State<UsersScreen> {
 
           const SizedBox(height: 20),
 
-          // Users Data Table - Balanced Full-Width Grid
+          // Users Data Table - Balanced Full-Width Grid with Responsive Scroll
           Container(
             decoration: BoxDecoration(
               color: AdminColors.surface,
@@ -115,27 +115,29 @@ class _UsersScreenState extends State<UsersScreen> {
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child: Column(
-                children: [
-                  // Table Header Row
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-                    decoration: BoxDecoration(
-                      color: AdminColors.surfaceLight,
-                      border: Border(bottom: BorderSide(color: AdminColors.border)),
-                    ),
-                    child: Row(
-                      children: [
-                        _buildHeaderCell('NGƯỜI DÙNG', flex: 26),
-                        _buildHeaderCell('TRẠNG THÁI', flex: 16),
-                        _buildHeaderCell('ĐÃ CHI TIÊU', flex: 16),
-                        _buildHeaderCell('MÓN CÂN NHẮC', flex: 14),
-                        _buildHeaderCell('THIẾT BỊ', flex: 20),
-                        _buildHeaderCell('HOẠT ĐỘNG CUỐI', flex: 16),
-                        _buildHeaderCell('THAO TÁC', flex: 12, alignment: Alignment.centerRight),
-                      ],
-                    ),
-                  ),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final tableContent = Column(
+                    children: [
+                      // Table Header Row
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                        decoration: BoxDecoration(
+                          color: AdminColors.surfaceLight,
+                          border: Border(bottom: BorderSide(color: AdminColors.border)),
+                        ),
+                        child: Row(
+                          children: [
+                            _buildHeaderCell('NGƯỜI DÙNG', flex: 26),
+                            _buildHeaderCell('TRẠNG THÁI', flex: 16),
+                            _buildHeaderCell('ĐÃ CHI TIÊU', flex: 16),
+                            _buildHeaderCell('MÓN CÂN NHẮC', flex: 14),
+                            _buildHeaderCell('THIẾT BỊ', flex: 20),
+                            _buildHeaderCell('HOẠT ĐỘNG CUỐI', flex: 16),
+                            _buildHeaderCell('THAO TÁC', flex: 12, alignment: Alignment.centerRight),
+                          ],
+                        ),
+                      ),
 
                   // Data Rows
                   if (filteredUsers.isEmpty)
@@ -301,7 +303,7 @@ class _UsersScreenState extends State<UsersScreen> {
                                       ),
                                     ),
                                     onPressed: () => admin.selectUserForPush(user),
-                                    icon: const Icon(Icons.send_rounded, size: 12),
+                                    icon: const Icon(Icons.campaign_rounded, size: 12),
                                     label: const Text('Gửi Push', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700)),
                                   ),
                                 ),
@@ -311,7 +313,21 @@ class _UsersScreenState extends State<UsersScreen> {
                         );
                       },
                     ),
-                ],
+                  ],
+                );
+
+                  if (constraints.maxWidth < 850) {
+                    return SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: SizedBox(
+                        width: 850,
+                        child: tableContent,
+                      ),
+                    );
+                  }
+
+                  return tableContent;
+                },
               ),
             ),
           ),
@@ -371,7 +387,7 @@ class _UsersScreenState extends State<UsersScreen> {
           borderRadius: BorderRadius.circular(6),
           border: Border.all(color: AdminColors.purple.withValues(alpha: 0.3)),
         ),
-        child: const Text('Tải chưa dùng', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: Color(0xFFD8B4FE))),
+        child: const Text('Tải chưa dùng', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AdminColors.purple)),
       );
     } else if (user.isNewToday) {
       return Container(

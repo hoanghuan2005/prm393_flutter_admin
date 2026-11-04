@@ -54,57 +54,53 @@ class _AiAssistantScreenState extends State<AiAssistantScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Banner
+          // Banner (Flat, No Gradient, Fully Responsive)
           Container(
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Color(0xFF451A03), Color(0xFF131C31), Color(0xFF2E1065)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+              color: AdminColors.surface,
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: AdminColors.primary.withValues(alpha: 0.3)),
+              border: Border.all(color: AdminColors.border),
             ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: AdminColors.primary.withValues(alpha: 0.2),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: const Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.psychology_rounded, size: 14, color: AdminColors.primary),
-                            SizedBox(width: 4),
-                            Text('GEMINI AI BEHAVIORAL FINANCE ENGINE', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: AdminColors.primary)),
-                          ],
-                        ),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final isNarrow = constraints.maxWidth < 700;
+
+                final textSection = Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: AdminColors.primary.withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(6),
                       ),
-                      const SizedBox(height: 10),
-                      Text(
-                        'AI Gợi Ý Câu Hỏi Tự Vấn (Next Question) & Thông Điệp Đồng Cảm',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: AdminColors.textPrimary),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.psychology_rounded, size: 14, color: AdminColors.primary),
+                          SizedBox(width: 4),
+                          Text('GEMINI AI BEHAVIORAL FINANCE ENGINE', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: AdminColors.primary)),
+                        ],
                       ),
-                      const SizedBox(height: 6),
-                      Text(
-                        'Dựa trên triết lý Why I Buy: Không phán xét hay ngăn cản, mà đồng hành cùng người dùng bằng những câu hỏi gợi mở để kích hoạt tư duy phản biện trước khi mua sắm.',
-                        style: TextStyle(fontSize: 12, color: AdminColors.textSecondary, height: 1.4),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 20),
-                Container(
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      'AI Gợi Ý Câu Hỏi Tự Vấn (Next Question) & Thông Điệp Đồng Cảm',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: AdminColors.textPrimary),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      'Dựa trên triết lý Why I Buy: Không phán xét hay ngăn cản, mà đồng hành cùng người dùng bằng những câu hỏi gợi mở để kích hoạt tư duy phản biện trước khi mua sắm.',
+                      style: TextStyle(fontSize: 12, color: AdminColors.textSecondary, height: 1.4),
+                    ),
+                  ],
+                );
+
+                final badgeSection = Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: AdminColors.surface,
+                    color: AdminColors.surfaceLight,
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(color: AdminColors.border),
                   ),
@@ -117,14 +113,33 @@ class _AiAssistantScreenState extends State<AiAssistantScreen> {
                       const Text('Tương tác: +42%', style: TextStyle(fontSize: 10, color: AdminColors.emerald, fontWeight: FontWeight.w700)),
                     ],
                   ),
-                ),
-              ],
+                );
+
+                if (isNarrow) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      textSection,
+                      const SizedBox(height: 16),
+                      badgeSection,
+                    ],
+                  );
+                }
+
+                return Row(
+                  children: [
+                    Expanded(child: textSection),
+                    const SizedBox(width: 20),
+                    badgeSection,
+                  ],
+                );
+              },
             ),
           ),
 
           const SizedBox(height: 24),
 
-          // Custom Prompt Input
+          // Custom Prompt Input (Responsive)
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
@@ -143,26 +158,26 @@ class _AiAssistantScreenState extends State<AiAssistantScreen> {
                   ],
                 ),
                 const SizedBox(height: 12),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: _promptController,
-                        style: TextStyle(fontSize: 13, color: AdminColors.textPrimary),
-                        decoration: InputDecoration(
-                          hintText: 'Ví dụ: Giày thể thao hàng hiệu, Trà sữa mỗi ngày, Đồ công nghệ mùa sale...',
-                          hintStyle: TextStyle(fontSize: 13, color: AdminColors.textSecondary),
-                          filled: true,
-                          fillColor: AdminColors.surfaceLight,
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: AdminColors.border)),
-                          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: AdminColors.border)),
-                          focusedBorder: const OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12)), borderSide: BorderSide(color: AdminColors.primary, width: 1.5)),
-                        ),
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    final isNarrow = constraints.maxWidth < 600;
+
+                    final textField = TextField(
+                      controller: _promptController,
+                      style: TextStyle(fontSize: 13, color: AdminColors.textPrimary),
+                      decoration: InputDecoration(
+                        hintText: 'Ví dụ: Giày thể thao hàng hiệu, Trà sữa mỗi ngày, Đồ công nghệ mùa sale...',
+                        hintStyle: TextStyle(fontSize: 13, color: AdminColors.textSecondary),
+                        filled: true,
+                        fillColor: AdminColors.surfaceLight,
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: AdminColors.border)),
+                        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: AdminColors.border)),
+                        focusedBorder: const OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12)), borderSide: BorderSide(color: AdminColors.primary, width: 1.5)),
                       ),
-                    ),
-                    const SizedBox(width: 12),
-                    ElevatedButton.icon(
+                    );
+
+                    final submitButton = ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AdminColors.primary,
                         foregroundColor: AdminColors.onPrimary,
@@ -177,8 +192,26 @@ class _AiAssistantScreenState extends State<AiAssistantScreen> {
                         _isGenerating ? 'AI đang suy nghĩ...' : 'Tạo Gợi Ý Thông Minh',
                         style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800),
                       ),
-                    ),
-                  ],
+                    );
+
+                    if (isNarrow) {
+                      return Column(
+                        children: [
+                          textField,
+                          const SizedBox(height: 10),
+                          SizedBox(width: double.infinity, child: submitButton),
+                        ],
+                      );
+                    }
+
+                    return Row(
+                      children: [
+                        Expanded(child: textField),
+                        const SizedBox(width: 12),
+                        submitButton,
+                      ],
+                    );
+                  },
                 ),
 
                 if (_customResult != null) ...[
@@ -186,7 +219,7 @@ class _AiAssistantScreenState extends State<AiAssistantScreen> {
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: AdminColors.background,
+                      color: AdminColors.surfaceLight,
                       borderRadius: BorderRadius.circular(14),
                       border: Border.all(color: AdminColors.primary.withValues(alpha: 0.4)),
                     ),
@@ -209,7 +242,7 @@ class _AiAssistantScreenState extends State<AiAssistantScreen> {
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                               ),
                               onPressed: () => admin.applyAiSuggestionToPush(_customResult!),
-                              icon: const Icon(Icons.send_rounded, size: 12),
+                              icon: const Icon(Icons.campaign_rounded, size: 12),
                               label: const Text('Áp dụng vào Push Notification', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800)),
                             ),
                           ],
@@ -228,75 +261,81 @@ class _AiAssistantScreenState extends State<AiAssistantScreen> {
 
           const SizedBox(height: 24),
 
-          // Default AI Questions Grid
+          // Default AI Questions Grid (Responsive)
           Text('DANH SÁCH CÂU HỎI TỰ VẤN GỢI Ý', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: AdminColors.textSecondary)),
           const SizedBox(height: 12),
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
-              childAspectRatio: 1.5,
-            ),
-            itemCount: admin.aiSuggestions.length,
-            itemBuilder: (context, index) {
-              final item = admin.aiSuggestions[index];
-              return Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: AdminColors.surface,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: AdminColors.border),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final crossAxisCount = constraints.maxWidth > 800 ? 2 : 1;
+
+              return GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: crossAxisCount,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                  mainAxisExtent: 220,
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
+                itemCount: admin.aiSuggestions.length,
+                itemBuilder: (context, index) {
+                  final item = admin.aiSuggestions[index];
+                  return Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: AdminColors.surface,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: AdminColors.border),
+                    ),
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: AdminColors.primary.withValues(alpha: 0.15),
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          child: Text(
-                            item.categoryLabel,
-                            style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: AdminColors.primary),
-                          ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: AdminColors.primary.withValues(alpha: 0.15),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: Text(
+                                item.categoryLabel,
+                                style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: AdminColors.primary),
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            Text(
+                              '"${item.question}"',
+                              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: AdminColors.textPrimary, height: 1.3),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              item.psychologyInsight,
+                              style: TextStyle(fontSize: 11, color: AdminColors.textSecondary, height: 1.3),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 10),
-                        Text(
-                          '"${item.question}"',
-                          style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: AdminColors.textPrimary, height: 1.3),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(height: 6),
-                        Text(
-                          item.psychologyInsight,
-                          style: TextStyle(fontSize: 11, color: AdminColors.textSecondary, height: 1.3),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
+                        ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AdminColors.surfaceLight,
+                            foregroundColor: AdminColors.textPrimary,
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                          ),
+                          onPressed: () => admin.applyAiSuggestionToPush(item),
+                          icon: const Icon(Icons.campaign_rounded, size: 12, color: AdminColors.primary),
+                          label: const Text('Gửi thông điệp này cho user', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700)),
                         ),
                       ],
                     ),
-                    ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AdminColors.surfaceLight,
-                        foregroundColor: Colors.white,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                      ),
-                      onPressed: () => admin.applyAiSuggestionToPush(item),
-                      icon: const Icon(Icons.send_rounded, size: 12, color: AdminColors.primary),
-                      label: const Text('Gửi thông điệp này cho user', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700)),
-                    ),
-                  ],
-                ),
+                  );
+                },
               );
             },
           ),
@@ -305,4 +344,3 @@ class _AiAssistantScreenState extends State<AiAssistantScreen> {
     );
   }
 }
-

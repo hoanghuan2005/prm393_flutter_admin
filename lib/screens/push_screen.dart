@@ -118,22 +118,20 @@ class _PushScreenState extends State<PushScreen> {
             ),
           ],
 
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Left Column: Compose Form
-              Expanded(
-                flex: 6,
-                child: Container(
-                  padding: const EdgeInsets.all(24),
-                  decoration: BoxDecoration(
-                    color: AdminColors.surface,
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: AdminColors.border),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final isNarrow = constraints.maxWidth < 900;
+
+              final formWidget = Container(
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  color: AdminColors.surface,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: AdminColors.border),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -332,7 +330,7 @@ class _PushScreenState extends State<PushScreen> {
                           onPressed: _isSending ? null : _handleSend,
                           icon: _isSending
                               ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: AdminColors.onPrimary))
-                              : const Icon(Icons.send_rounded, size: 16),
+                              : const Icon(Icons.campaign_rounded, size: 18),
                           label: Text(
                             _isSending ? 'Đang gửi thông điệp...' : 'Bắn Thông Báo Push Ngay Bây Giờ',
                             style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800),
@@ -341,145 +339,157 @@ class _PushScreenState extends State<PushScreen> {
                       ),
                     ],
                   ),
-                ),
-              ),
+                );
 
-              const SizedBox(width: 24),
-
-              // Right Column: Phone Preview & Broadcast History
-              Expanded(
-                flex: 4,
-                child: Column(
-                  children: [
-                    // Phone Notification Mockup Preview
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: AdminColors.surface,
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: AdminColors.border),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
+              final previewWidget = Column(
+                children: [
+                  // Phone Notification Mockup Preview
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: AdminColors.surface,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: AdminColors.border),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(Icons.phone_android_rounded, size: 18, color: AdminColors.primary),
+                            const SizedBox(width: 8),
+                            Text('XEM TRƯỚC TRÊN ĐIỆN THOẠI', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: AdminColors.textSecondary)),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        Container(
+                          padding: const EdgeInsets.all(14),
+                          decoration: BoxDecoration(
+                            color: AdminColors.background,
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(color: AdminColors.borderSubtle),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Icon(Icons.phone_android_rounded, size: 18, color: AdminColors.primary),
-                              const SizedBox(width: 8),
-                              Text('XEM TRƯỚC TRÊN ĐIỆN THOẠI', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: AdminColors.textSecondary)),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Container(
+                                        width: 20,
+                                        height: 20,
+                                        decoration: BoxDecoration(color: AdminColors.primary, borderRadius: BorderRadius.circular(4)),
+                                        alignment: Alignment.center,
+                                        child: const Text('W', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w900, color: AdminColors.onPrimary)),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Text('Why I Buy', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: AdminColors.textPrimary)),
+                                    ],
+                                  ),
+                                  Text('Bây giờ', style: TextStyle(fontSize: 10, color: AdminColors.textSecondary)),
+                                ],
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                _titleController.text.isNotEmpty ? _titleController.text : 'Tiêu đề thông báo...',
+                                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: AdminColors.textPrimary),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                _bodyController.text.isNotEmpty ? _bodyController.text : 'Nội dung thông điệp người dùng nhận được...',
+                                style: TextStyle(fontSize: 11, color: AdminColors.textSecondary, height: 1.3),
+                              ),
                             ],
                           ),
-                          const SizedBox(height: 16),
-                          Container(
-                            padding: const EdgeInsets.all(14),
-                            decoration: BoxDecoration(
-                              color: AdminColors.background,
-                              borderRadius: BorderRadius.circular(14),
-                              border: Border.all(color: AdminColors.borderSubtle),
-                            ),
-                            child: Column(
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  // History Card
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: AdminColors.surface,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: AdminColors.border),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('LỊCH SỬ THÔNG BÁO ĐÃ GỬI', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: AdminColors.textSecondary)),
+                            Icon(Icons.history_rounded, size: 18, color: AdminColors.textSecondary),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        ListView.separated(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: admin.broadcasts.length,
+                          separatorBuilder: (_, _) => Divider(color: AdminColors.border, height: 16),
+                          itemBuilder: (context, index) {
+                            final bc = admin.broadcasts[index];
+                            return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Row(
-                                      children: [
-                                        Container(
-                                          width: 20,
-                                          height: 20,
-                                          decoration: BoxDecoration(color: AdminColors.primary, borderRadius: BorderRadius.circular(4)),
-                                          alignment: Alignment.center,
-                                          child: const Text('W', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w900, color: AdminColors.onPrimary)),
-                                        ),
-                                        const SizedBox(width: 8),
-                                        Text('Why I Buy', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: AdminColors.textPrimary)),
-                                      ],
+                                    Expanded(
+                                      child: Text(
+                                        bc.title,
+                                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AdminColors.textPrimary),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                     ),
-                                    Text('Bây giờ', style: TextStyle(fontSize: 10, color: AdminColors.textSecondary)),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                      decoration: BoxDecoration(color: AdminColors.emerald.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(4)),
+                                      child: Text('Mở: ${bc.openRate}', style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: AdminColors.emerald)),
+                                    ),
                                   ],
                                 ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  _titleController.text.isNotEmpty ? _titleController.text : 'Tiêu đề thông báo...',
-                                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: AdminColors.textPrimary),
-                                ),
+                                const SizedBox(height: 2),
+                                Text(bc.body, style: TextStyle(fontSize: 11, color: AdminColors.textSecondary), maxLines: 2, overflow: TextOverflow.ellipsis),
                                 const SizedBox(height: 4),
-                                Text(
-                                  _bodyController.text.isNotEmpty ? _bodyController.text : 'Nội dung thông điệp người dùng nhận được...',
-                                  style: TextStyle(fontSize: 11, color: AdminColors.textSecondary, height: 1.3),
-                                ),
+                                Text('Đã phát: ${bc.deliveredCount} thiết bị • ${bc.sentAt}', style: TextStyle(fontSize: 10, color: AdminColors.textMuted)),
                               ],
-                            ),
-                          ),
-                        ],
-                      ),
+                            );
+                          },
+                        ),
+                      ],
                     ),
+                  ),
+                ],
+              );
 
-                    const SizedBox(height: 20),
-
-                    // History Card
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: AdminColors.surface,
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: AdminColors.border),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('LỊCH SỬ THÔNG BÁO ĐÃ GỬI', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: AdminColors.textSecondary)),
-                              Icon(Icons.history_rounded, size: 18, color: AdminColors.textSecondary),
-                            ],
-                          ),
-                          const SizedBox(height: 12),
-                          ListView.separated(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: admin.broadcasts.length,
-                            separatorBuilder: (_, _) => Divider(color: AdminColors.border, height: 16),
-                            itemBuilder: (context, index) {
-                              final bc = admin.broadcasts[index];
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          bc.title,
-                                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AdminColors.textPrimary),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                        decoration: BoxDecoration(color: AdminColors.emerald.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(4)),
-                                        child: Text('Mở: ${bc.openRate}', style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: AdminColors.emerald)),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 2),
-                                  Text(bc.body, style: TextStyle(fontSize: 11, color: AdminColors.textSecondary), maxLines: 2, overflow: TextOverflow.ellipsis),
-                                  const SizedBox(height: 4),
-                                  Text('Đã phát: ${bc.deliveredCount} thiết bị • ${bc.sentAt}', style: TextStyle(fontSize: 10, color: AdminColors.textMuted)),
-                                ],
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
+              if (isNarrow) {
+                return Column(
+                  children: [
+                    formWidget,
+                    const SizedBox(height: 24),
+                    previewWidget,
                   ],
-                ),
-              ),
-            ],
+                );
+              }
+
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(flex: 6, child: formWidget),
+                  const SizedBox(width: 24),
+                  Expanded(flex: 4, child: previewWidget),
+                ],
+              );
+            },
           ),
         ],
       ),

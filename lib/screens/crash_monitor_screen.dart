@@ -34,21 +34,36 @@ class _CrashMonitorScreenState extends State<CrashMonitorScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Top Stats
-          Row(
-            children: [
-              Expanded(
-                child: _buildHealthCard('Sự cố đang diễn ra', '$activeCount lỗi', 'Cần can thiệp fix bug', AdminColors.rose, Icons.warning_amber_rounded),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: _buildHealthCard('Thiết bị bị ảnh hưởng', '$totalAffected thiết bị', 'Trong 48 giờ qua', AdminColors.amber, Icons.phone_android_rounded),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: _buildHealthCard('Tỷ lệ phiên ổn định', '${admin.metrics.crashFreeUsersRate}%', 'Mục tiêu hệ thống > 99.0%', AdminColors.emerald, Icons.shield_rounded),
-              ),
-            ],
+          // Top Stats (Responsive Layout)
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final isNarrow = constraints.maxWidth < 800;
+              final card1 = _buildHealthCard('Sự cố đang diễn ra', '$activeCount lỗi', 'Cần can thiệp fix bug', AdminColors.rose, Icons.warning_amber_rounded);
+              final card2 = _buildHealthCard('Thiết bị bị ảnh hưởng', '$totalAffected thiết bị', 'Trong 48 giờ qua', AdminColors.amber, Icons.phone_android_rounded);
+              final card3 = _buildHealthCard('Tỷ lệ phiên ổn định', '${admin.metrics.crashFreeUsersRate}%', 'Mục tiêu hệ thống > 99.0%', AdminColors.emerald, Icons.shield_rounded);
+
+              if (isNarrow) {
+                return Column(
+                  children: [
+                    card1,
+                    const SizedBox(height: 12),
+                    card2,
+                    const SizedBox(height: 12),
+                    card3,
+                  ],
+                );
+              }
+
+              return Row(
+                children: [
+                  Expanded(child: card1),
+                  const SizedBox(width: 16),
+                  Expanded(child: card2),
+                  const SizedBox(width: 16),
+                  Expanded(child: card3),
+                ],
+              );
+            },
           ),
 
           const SizedBox(height: 24),

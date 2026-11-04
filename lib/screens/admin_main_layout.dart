@@ -132,12 +132,12 @@ class AdminMainLayout extends StatelessWidget {
                       ),
                       _buildNavItem(context, 0, 'Tổng quan & Chỉ số', Icons.dashboard_rounded, admin.selectedTabIndex == 0),
                       _buildNavItem(context, 1, 'Quản lý Người dùng', Icons.people_alt_rounded, admin.selectedTabIndex == 1),
-                      _buildNavItem(context, 2, 'Gửi Thông điệp (Push)', Icons.send_rounded, admin.selectedTabIndex == 2),
+                      _buildNavItem(context, 2, 'Gửi Thông điệp (Push)', Icons.campaign_rounded, admin.selectedTabIndex == 2),
                       _buildNavItem(
                         context,
                         3,
                         'AI Suggest & Câu hỏi',
-                        Icons.psychology_rounded,
+                        Icons.auto_awesome_rounded,
                         admin.selectedTabIndex == 3,
                         badge: 'Gemini',
                       ),
@@ -216,112 +216,123 @@ class AdminMainLayout extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        titles[admin.selectedTabIndex],
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w900,
-                          color: AdminColors.textPrimary,
+                      Expanded(
+                        child: Text(
+                          titles[admin.selectedTabIndex],
+                          style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w900,
+                            color: AdminColors.textPrimary,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      Row(
-                        children: [
-                          // ☀️🌙 Nút Đổi Theme (Sáng / Tối)
-                          InkWell(
-                            onTap: () => admin.toggleTheme(),
-                            borderRadius: BorderRadius.circular(10),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      const SizedBox(width: 12),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            // ☀️🌙 Nút Đổi Theme (Sáng / Tối)
+                            InkWell(
+                              onTap: () => admin.toggleTheme(),
+                              borderRadius: BorderRadius.circular(10),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                decoration: BoxDecoration(
+                                  color: AdminColors.surfaceLight,
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(color: AdminColors.border),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      admin.isDarkMode ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
+                                      size: 16,
+                                      color: admin.isDarkMode ? AdminColors.primary : AdminColors.purple,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      admin.isDarkMode ? 'Chế độ Sáng' : 'Chế độ Tối',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w700,
+                                        color: AdminColors.textPrimary,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+
+                            // Toggle Live Firebase / Demo Mode
+                            ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: admin.isLiveFirebase
+                                    ? AdminColors.emerald.withValues(alpha: 0.15)
+                                    : AdminColors.primary.withValues(alpha: 0.15),
+                                foregroundColor: admin.isLiveFirebase ? AdminColors.emerald : AdminColors.primary,
+                                elevation: 0,
+                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  side: BorderSide(
+                                    color: admin.isLiveFirebase ? AdminColors.emerald : AdminColors.primary,
+                                    width: 0.8,
+                                  ),
+                                ),
+                              ),
+                              onPressed: () => admin.toggleLiveFirebase(),
+                              icon: const Icon(Icons.storage_rounded, size: 16),
+                              label: Text(
+                                admin.isLiveFirebase ? 'Nguồn: Firebase Live' : 'Nguồn: Dữ liệu Demo',
+                                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+
+                            // Refresh
+                            IconButton(
+                              icon: admin.isLoading
+                                  ? const SizedBox(
+                                      width: 16,
+                                      height: 16,
+                                      child: CircularProgressIndicator(strokeWidth: 2, color: AdminColors.primary),
+                                    )
+                                  : Icon(Icons.refresh_rounded, color: AdminColors.textSecondary, size: 20),
+                              onPressed: () => admin.fetchFirebaseData(),
+                            ),
+                            const SizedBox(width: 10),
+
+                            // Admin avatar
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                               decoration: BoxDecoration(
                                 color: AdminColors.surfaceLight,
                                 borderRadius: BorderRadius.circular(10),
                                 border: Border.all(color: AdminColors.border),
                               ),
                               child: Row(
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Icon(
-                                    admin.isDarkMode ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
-                                    size: 16,
-                                    color: admin.isDarkMode ? AdminColors.primary : AdminColors.purple,
+                                  const CircleAvatar(
+                                    radius: 12,
+                                    backgroundColor: AdminColors.primary,
+                                    child: Text('AD', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w900, color: AdminColors.onPrimary)),
                                   ),
                                   const SizedBox(width: 8),
                                   Text(
-                                    admin.isDarkMode ? 'Chế độ Sáng' : 'Chế độ Tối',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w700,
-                                      color: AdminColors.textPrimary,
-                                    ),
+                                    'Admin Quản Trị',
+                                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AdminColors.textPrimary),
                                   ),
                                 ],
                               ),
                             ),
-                          ),
-                          const SizedBox(width: 10),
-
-                          // Toggle Live Firebase / Demo Mode
-                          ElevatedButton.icon(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: admin.isLiveFirebase
-                                  ? AdminColors.emerald.withValues(alpha: 0.15)
-                                  : AdminColors.primary.withValues(alpha: 0.15),
-                              foregroundColor: admin.isLiveFirebase ? AdminColors.emerald : AdminColors.primary,
-                              elevation: 0,
-                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                side: BorderSide(
-                                  color: admin.isLiveFirebase ? AdminColors.emerald : AdminColors.primary,
-                                  width: 0.8,
-                                ),
-                              ),
-                            ),
-                            onPressed: () => admin.toggleLiveFirebase(),
-                            icon: const Icon(Icons.storage_rounded, size: 16),
-                            label: Text(
-                              admin.isLiveFirebase ? 'Nguồn: Firebase Live' : 'Nguồn: Dữ liệu Demo',
-                              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800),
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-
-                          // Refresh
-                          IconButton(
-                            icon: admin.isLoading
-                                ? const SizedBox(
-                                    width: 16,
-                                    height: 16,
-                                    child: CircularProgressIndicator(strokeWidth: 2, color: AdminColors.primary),
-                                  )
-                                : Icon(Icons.refresh_rounded, color: AdminColors.textSecondary, size: 20),
-                            onPressed: () => admin.fetchFirebaseData(),
-                          ),
-                          const SizedBox(width: 10),
-
-                          // Admin avatar
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                            decoration: BoxDecoration(
-                              color: AdminColors.surfaceLight,
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: AdminColors.border),
-                            ),
-                            child: Row(
-                              children: [
-                                const CircleAvatar(
-                                  radius: 12,
-                                  backgroundColor: AdminColors.primary,
-                                  child: Text('AD', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w900, color: AdminColors.onPrimary)),
-                                ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  'Admin Quản Trị',
-                                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AdminColors.textPrimary),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ],
                   ),

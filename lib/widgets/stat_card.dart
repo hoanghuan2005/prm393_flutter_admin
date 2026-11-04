@@ -29,7 +29,7 @@ class StatCard extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
       child: Container(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
         decoration: BoxDecoration(
           color: AdminColors.surface,
           borderRadius: BorderRadius.circular(16),
@@ -37,8 +37,8 @@ class StatCard extends StatelessWidget {
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            // Title & Icon row
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -46,37 +46,48 @@ class StatCard extends StatelessWidget {
                   child: Text(
                     title.toUpperCase(),
                     style: TextStyle(
-                      fontSize: 11,
+                      fontSize: 10.5,
                       fontWeight: FontWeight.w700,
-                      letterSpacing: 0.8,
+                      letterSpacing: 0.7,
                       color: AdminColors.textSecondary,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
+                const SizedBox(width: 8),
                 Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(7),
                   decoration: BoxDecoration(
                     color: accentColor.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(9),
                     border: Border.all(color: accentColor.withValues(alpha: 0.3)),
                   ),
-                  child: Icon(icon, size: 20, color: accentColor),
+                  child: Icon(icon, size: 18, color: accentColor),
                 ),
               ],
             ),
-            const SizedBox(height: 12),
-            Text(
-              value,
-              style: TextStyle(
-                fontSize: 26,
-                fontWeight: FontWeight.w800,
-                color: AdminColors.textPrimary,
-                letterSpacing: -0.5,
+
+            const Spacer(),
+
+            // Value text (FittedBox scales down cleanly on small screens, never wraps/overflows)
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Text(
+                value,
+                style: TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.w800,
+                  color: AdminColors.textPrimary,
+                  letterSpacing: -0.5,
+                ),
               ),
             ),
-            const SizedBox(height: 12),
+
+            const Spacer(),
+
+            // Subtitle & Trend row
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -91,7 +102,8 @@ class StatCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                if (trendText != null)
+                if (trendText != null) ...[
+                  const SizedBox(width: 6),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                     decoration: BoxDecoration(
@@ -111,6 +123,7 @@ class StatCard extends StatelessWidget {
                       ),
                     ),
                   ),
+                ],
               ],
             ),
           ],
