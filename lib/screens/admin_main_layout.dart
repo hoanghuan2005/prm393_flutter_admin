@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import '../services/admin_service.dart';
 import '../theme/admin_colors.dart';
@@ -327,6 +328,22 @@ class AdminMainLayout extends StatelessWidget {
                                   Text(
                                     'Admin Quản Trị',
                                     style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AdminColors.textPrimary),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  IconButton(
+                                    tooltip: 'Đăng xuất',
+                                    icon: const Icon(Icons.logout_rounded, size: 18),
+                                    color: AdminColors.rose,
+                                    onPressed: () async {
+                                      try {
+                                        await FirebaseAuth.instance.signOut();
+                                      } catch (error) {
+                                        if (!context.mounted) return;
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(content: Text('Đăng xuất thất bại: $error')),
+                                        );
+                                      }
+                                    },
                                   ),
                                 ],
                               ),

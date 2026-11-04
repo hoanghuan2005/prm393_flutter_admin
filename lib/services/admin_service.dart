@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/admin_models.dart';
 import '../data/mock_admin_data.dart';
 import '../theme/admin_colors.dart';
 
 class AdminService extends ChangeNotifier {
+  static const adminEmail = 'admin@gmail.com';
   int _selectedTabIndex = 0;
   bool _isLiveFirebase = false;
   bool _isLoading = false;
@@ -28,6 +30,7 @@ class AdminService extends ChangeNotifier {
   bool get isLiveFirebase => _isLiveFirebase;
   bool get isLoading => _isLoading;
   bool get isDarkMode => _isDarkMode;
+  User? get adminUser => FirebaseAuth.instance.currentUser;
   DashboardMetrics get metrics => _metrics;
   List<UserAnalytics> get users => _users;
   List<CrashReport> get crashes => _crashes;
@@ -149,7 +152,7 @@ class AdminService extends ChangeNotifier {
           return UserAnalytics(
             uid: doc.id,
             displayName: data['displayName'] ?? data['name'] ?? 'User ${doc.id.substring(0, 4)}',
-            email: data['email'] ?? 'user_${doc.id.substring(0, 5)}@gmail.com',
+            email: data['email'] ?? '',
             createdAt: '2026-11-03 09:00',
             lastActiveAt: '2026-11-03 15:30',
             isNewToday: true,

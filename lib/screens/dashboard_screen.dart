@@ -404,7 +404,7 @@ class DashboardScreen extends StatelessWidget {
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: const [
+                        children: [
                           _MiniSummaryItem(label: 'Android Users', value: '78.4%'),
                           _MiniSummaryItem(label: 'iOS Users', value: '21.6%'),
                           _MiniSummaryItem(label: 'Tỷ lệ Mở Push', value: '41.2%'),
@@ -483,11 +483,25 @@ class _MiniSummaryItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<AdminService>();
     return Column(
       children: [
-        Text(value, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: AdminColors.textPrimary)),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w800,
+            color: AdminColors.textPrimary,
+          ),
+        ),
         const SizedBox(height: 2),
-        Text(label, style: TextStyle(fontSize: 11, color: AdminColors.textSecondary)),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 11,
+            color: AdminColors.textSecondary,
+          ),
+        ),
       ],
     );
   }
